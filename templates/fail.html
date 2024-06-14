@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style1.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prata&family=Sarabun:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Sentinal Shield</title>
+  </head>
+
+  <body id="b1">
+    <div id="v2" class="container">
+        <p>
+          Sorry for the inconvenience caused.<br /></br>
+          There has been a <b>Verification issue.</b><br />
+          Please meet with our <b>Officer</b> for further
+          <b>Verification Procedures.</b>
+        
+            Please step away from the system for the next passenger to continue their verification process
+        </p>
+        <p id="timer"></p>
+        <script>
+            let count = 5;
+  let timer = setInterval(function() {
+    document.getElementById("demo").innerHTML = "Countdown: " + count;
+    count--;
+    if (count <= 0) {
+      clearInterval(timer);
+      document.getElementById("demo").innerHTML = "Time's up!";
+    }
+  }, 1000);
+        </script>
+        <audio controls autoplay muted>
+          <source src="/static/Fail aud.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+    </body>
+    </html>
