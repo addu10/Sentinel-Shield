@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('bg-white.jpg');
+      /* Replace 'bg-white.jpg' with the correct path to your image file */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 400px;
+      padding: 40px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      background: transparent;
+    }
+
+    img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    .main_head {
+      color: #333;
+      margin-bottom: 10px;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+    }
+
+    .para1 {
+      color: #666;
+      margin-bottom: 30px;
+
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      background-color: #800000;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.6s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: HSL(0, 100%, 20%);
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="/static/profile.jpg" alt="Company Logo">
+    <h2 class="main_head">Executive Dashboard Login</h2>
+    <p class="para1">Provide the required information to access the administrative panel</p>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" placeholder="Enter your username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <input type="submit" value="Login">
+    </form>
+  </div>
+  <script>
+    // Add form validation
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent the form from submitting
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Perform validation logic here
+      if (username === 'ashbinpa' && password === 'ashbinpa123@') {
+        // Credentials are correct, redirect to the dashboard
+        window.location.href = "{{url_for('login_page')}}";
+      } else {
+        // Credentials are incorrect, display an error message
+        alert('Invalid username or password. Please try again.');
+      }
+    });
+  </script>
+</body>
+
+</html>

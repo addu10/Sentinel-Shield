@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sentinel</title>
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+  </script>
+
+  <link rel="stylesheet" href="/static/face.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/finalfavicon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <!--NOT INSPECTING MECHANISM
+    ==================================================-->
+  <script>
+    window.onload = function () {
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+      });
+    }
+  </script>
+</head>
+
+
+<body id="top">
+
+
+  <!-- preloader
+    ================================================== -->
+  <div id="preloader">
+    <div id="loader">
+    </div>
+  </div>
+
+
+  <!-- page wrap
+    ================================================== -->
+  <div id="page" class="s-pagewrap">
+
+
+    <!-- # site header 
+        ================================================== -->
+    <header class="s-header">
+
+      <div class="s-header__logo">
+        <a class="logo" href="{{url_for('landing')}}">
+          <img src="/static/logo.svg" alt="Homepage">
+        </a>
+      </div>
+
+    </header> <!-- end s-header -->
+
+
+    <!-- # site-content
+        ================================================== -->
+    <section id="content" class="s-content">
+
+
+      <!-- intro
+            ----------------------------------------------- -->
+      <section id="intro" class="s-intro target-section">
+
+        <div class="s-intro__bg rellax" data-rellax-speed="-5"></div>
+
+        <div class="row s-intro__content">
+
+          <div class="column lg-12 s-intro__content-inner">
+            <h3 class="s-intro__pretitle">welcome passenger.</h3>
+            <h1 class="s-intro__title">
+              FACE SCANNING</h1>
+            <h3 class="s-intro__pretitle">please stand infront of the camera.</h3>
+            <div class="webcam">
+                <img class="video" src="{{ url_for('video_feed') }}" width="45%">
+                <div class="checkcounter">
+                    <p id="message">
+                      HELLOOO
+                    </p>
+                  </div>
+                <script>
+                    var i="hello";
+                  
+                    function counter(){
+                        i++;
+                        document.getElementById("message").textContent = i;
+                      
+                    }
+                    
+                  
+                  
+                  
+                    function fun() {
+                      fetch('/counter',{
+                        method: "POST",
+                        headers: {
+                              "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({i:i}),
+                      })
+                      .then((response) => response.json())
+                      .then((data) => {
+                  
+                        if (data.status === "success") {
+                          document.getElementById("message").textContent = "Face Recognized";
+                          window.location.href = "{{url_for('verification')}}";
+                        } else {
+                          document.getElementById("message").textContent = "Invalid Face";
+                          window.location.href = "{{url_for('facefail')}}"
+                        }
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                        document.getElementById("message").textContent = "Failed to capture face";
+                      });
+                    }
+                  
+                    setTimeout(fun,20000);
+                  
+                  
+                  
+                  
+                  </script>
+            </div>
+
+          </div> <!-- s-intro__content-inner -->
+
+        </div> <!-- s-intro__content -->
+
+            </section> <!-- end s-intro -->
+        
+  <!-- Java Script
+    ================================================== -->
+    
+  <script src="/static/plugins.js"></script>
+  <script src="/static/main.js"></script>
+
+</body>
+
+</html>

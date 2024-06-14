@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel</title>
+    <style>
+        body{
+          background-image: linear-gradient(200deg, rgba(213, 213, 213, 0.01) 0%, rgba(213, 213, 213, 0.01) 14.286%,rgba(140, 140, 140, 0.01) 14.286%, rgba(140, 140, 140, 0.01) 28.572%,rgba(52, 52, 52, 0.01) 28.572%, rgba(52, 52, 52, 0.01) 42.858%,rgba(38, 38, 38, 0.01) 42.858%, rgba(38, 38, 38, 0.01) 57.144%,rgba(159, 159, 159, 0.01) 57.144%, rgba(159, 159, 159, 0.01) 71.42999999999999%,rgba(71, 71, 71, 0.01) 71.43%, rgba(71, 71, 71, 0.01) 85.71600000000001%,rgba(88, 88, 88, 0.01) 85.716%, rgba(88, 88, 88, 0.01) 100.002%),linear-gradient(337deg, rgba(25, 25, 25, 0.01) 0%, rgba(25, 25, 25, 0.01) 12.5%,rgba(150, 150, 150, 0.01) 12.5%, rgba(150, 150, 150, 0.01) 25%,rgba(84, 84, 84, 0.01) 25%, rgba(84, 84, 84, 0.01) 37.5%,rgba(85, 85, 85, 0.01) 37.5%, rgba(85, 85, 85, 0.01) 50%,rgba(188, 188, 188, 0.01) 50%, rgba(188, 188, 188, 0.01) 62.5%,rgba(80, 80, 80, 0.01) 62.5%, rgba(80, 80, 80, 0.01) 75%,rgba(73, 73, 73, 0.01) 75%, rgba(73, 73, 73, 0.01) 87.5%,rgba(219, 219, 219, 0.01) 87.5%, rgba(219, 219, 219, 0.01) 100%),linear-gradient(203deg, rgba(233, 233, 233, 0.01) 0%, rgba(233, 233, 233, 0.01) 25%,rgba(114, 114, 114, 0.01) 25%, rgba(114, 114, 114, 0.01) 50%,rgba(164, 164, 164, 0.01) 50%, rgba(164, 164, 164, 0.01) 75%,rgba(228, 228, 228, 0.01) 75%, rgba(228, 228, 228, 0.01) 100%),linear-gradient(317deg, rgba(139, 139, 139, 0.02) 0%, rgba(139, 139, 139, 0.02) 16.667%,rgba(44, 44, 44, 0.02) 16.667%, rgba(44, 44, 44, 0.02) 33.334%,rgba(166, 166, 166, 0.02) 33.334%, rgba(166, 166, 166, 0.02) 50.001000000000005%,rgba(2, 2, 2, 0.02) 50.001%, rgba(2, 2, 2, 0.02) 66.668%,rgba(23, 23, 23, 0.02) 66.668%, rgba(23, 23, 23, 0.02) 83.33500000000001%,rgba(21, 21, 21, 0.02) 83.335%, rgba(21, 21, 21, 0.02) 100.002%),linear-gradient(328deg, rgba(3, 3, 3, 0.03) 0%, rgba(3, 3, 3, 0.03) 12.5%,rgba(116, 116, 116, 0.03) 12.5%, rgba(116, 116, 116, 0.03) 25%,rgba(214, 214, 214, 0.03) 25%, rgba(214, 214, 214, 0.03) 37.5%,rgba(217, 217, 217, 0.03) 37.5%, rgba(217, 217, 217, 0.03) 50%,rgba(68, 68, 68, 0.03) 50%, rgba(68, 68, 68, 0.03) 62.5%,rgba(118, 118, 118, 0.03) 62.5%, rgba(118, 118, 118, 0.03) 75%,rgba(200, 200, 200, 0.03) 75%, rgba(200, 200, 200, 0.03) 87.5%,rgba(198, 198, 198, 0.03) 87.5%, rgba(198, 198, 198, 0.03) 100%),linear-gradient(97deg, rgba(195, 195, 195, 0.03) 0%, rgba(195, 195, 195, 0.03) 16.667%,rgba(177, 177, 177, 0.03) 16.667%, rgba(177, 177, 177, 0.03) 33.334%,rgba(170, 170, 170, 0.03) 33.334%, rgba(170, 170, 170, 0.03) 50.001000000000005%,rgba(158, 158, 158, 0.03) 50.001%, rgba(158, 158, 158, 0.03) 66.668%,rgba(121, 121, 121, 0.03) 66.668%, rgba(121, 121, 121, 0.03) 83.33500000000001%,rgba(146, 146, 146, 0.03) 83.335%, rgba(146, 146, 146, 0.03) 100.002%),linear-gradient(268deg, rgba(103, 103, 103, 0.03) 0%, rgba(103, 103, 103, 0.03) 25%,rgba(112, 112, 112, 0.03) 25%, rgba(112, 112, 112, 0.03) 50%,rgba(4, 4, 4, 0.03) 50%, rgba(4, 4, 4, 0.03) 75%,rgba(227, 227, 227, 0.03) 75%, rgba(227, 227, 227, 0.03) 100%),linear-gradient(90deg, hsl(98,0%,0%),hsl(98,0%,0%));
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .info{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          height: 100vh;
+          width: 600px;
+          border-color: #d8a323;
+          border-width: 2px;
+          border-right-width: 0px;
+          border-right-color: transparent;
+          border-style: double;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            width: 1000px;
+            border-color: #d8a323;
+            border-left-width: 0px;
+          border-width: 2px;
+          border-style: double;
+          
+          border-left-color: transparent;
+        }
+        
+
+        @keyframes square-animation {
+ 0% {
+  left: 0;
+  top: 0;
+ }
+
+ 10.5% {
+  left: 0;
+  top: 0;
+ }
+
+ 12.5% {
+  left: 8px;
+  top: 0;
+ }
+
+ 23% {
+  left: 8px;
+  top: 0;
+ }
+
+ 25% {
+  left: 16px;
+  top: 0;
+ }
+
+ 35.5% {
+  left: 16px;
+  top: 0;
+ }
+
+ 37.5% {
+  left: 16px;
+  top: 8px;
+ }
+
+ 48% {
+  left: 16px;
+  top: 8px;
+ }
+
+ 50% {
+  left: 8px;
+  top: 8px;
+ }
+
+ 60.5% {
+  left: 8px;
+  top: 8px;
+ }
+
+ 62.5% {
+  left: 8px;
+  top: 16px;
+ }
+
+ 73% {
+  left: 8px;
+  top: 16px;
+ }
+
+ 75% {
+  left: 0;
+  top: 16px;
+ }
+
+ 85.5% {
+  left: 0;
+  top: 16px;
+ }
+
+ 87.5% {
+  left: 0;
+  top: 8px;
+ }
+
+ 98% {
+  left: 0;
+  top: 8px;
+ }
+
+ 100% {
+  left: 0;
+  top: 0;
+ }
+}
+
+.number{
+    width: 700px;
+    height: 100px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+    
+}
+.verification-text {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            width: 400px;
+            font-family: 'Times New Roman', Times, serif;
+            color:whitesmoke;
+
+        }
+
+.loader {
+ position: relative;
+ width: 48px;
+ height: 48px;
+ left:70px;
+ transform: rotate(45deg);
+ justify-content: flex-end;
+
+}
+
+.loader-square {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 7px;
+ height: 7px;
+ margin-left: 50px;
+ margin-top: -20px;
+ border-radius: 0px;
+ background: white;
+ background-size: cover;
+ background-position: center;
+ background-attachment: fixed;
+ animation: square-animation 10s ease-in-out infinite both;
+}
+
+.loader-square:nth-of-type(0) {
+ animation-delay: 0s;
+}
+
+.loader-square:nth-of-type(1) {
+ animation-delay: -1.4285714286s;
+}
+
+.loader-square:nth-of-type(2) {
+ animation-delay: -2.8571428571s;
+}
+
+.loader-square:nth-of-type(3) {
+ animation-delay: -4.2857142857s;
+}
+
+.loader-square:nth-of-type(4) {
+ animation-delay: -5.7142857143s;
+}
+
+.loader-square:nth-of-type(5) {
+ animation-delay: -7.1428571429s;
+}
+
+.loader-square:nth-of-type(6) {
+ animation-delay: -8.5714285714s;
+}
+
+.loader-square:nth-of-type(7) {
+ animation-delay: -10s;
+}
+
+.tick-shape {
+  position: relative;
+ width: 48px;
+ height: 48px;
+ left:70px;
+ transform: rotate(45deg);
+ justify-content: flex-end;
+}
+
+.tick-shape-square {
+  position: absolute;
+   top: 0;
+   left: 0;
+ width: 7px;
+ height: 7px;
+ margin-left: 50px;
+ margin-top: -20px;
+ border-radius: 0px;
+ background: #d8a323;
+ background-size: cover;
+ background-position: center;
+ background-attachment: fixed;
+ animation: square-animation 10s ease-in-out infinite both;
+}
+
+.tick-shape-square:nth-of-type(0) {
+ animation-delay: 0s;
+}
+
+.tick-shape-square:nth-of-type(1) {
+ animation-delay: -1.4285714286s;
+}
+
+.tick-shape-square:nth-of-type(2) {
+ animation-delay: -2.8571428571s;
+}
+
+.tick-shape-square:nth-of-type(3) {
+ animation-delay: -4.2857142857s;
+}
+
+.tick-shape-square:nth-of-type(4) {
+ animation-delay: -5.7142857143s;
+}
+
+.tick-shape-square:nth-of-type(5) {
+ animation-delay: -7.1428571429s;
+}
+
+.tick-shape-square:nth-of-type(6) {
+ animation-delay: -8.5714285714s;
+}
+
+.tick-shape-square:nth-of-type(7) {
+ animation-delay: -10s;
+}
+
+.cross-shape {
+  position: relative;
+ width: 48px;
+ height: 48px;
+ left:70px;
+ transform: rotate(45deg);
+ justify-content: flex-end;
+}
+
+.cross-shape-square {
+  position: absolute;
+   top: 0;
+   left: 0;
+ width: 7px;
+ height: 7px;
+ margin-left: 50px;
+ margin-top: -20px;
+ border-radius: 0px;
+ background: #440001;
+ background-size: cover;
+ background-position: center;
+ background-attachment: fixed;
+ animation: square-animation 10s ease-in-out infinite both;
+}
+
+.cross-shape-square:nth-of-type(0) {
+ animation-delay: 0s;
+}
+
+.cross-shape-square:nth-of-type(1) {
+ animation-delay: -1.4285714286s;
+}
+
+.cross-shape-square:nth-of-type(2) {
+ animation-delay: -2.8571428571s;
+}
+
+.cross-shape-square:nth-of-type(3) {
+ animation-delay: -4.2857142857s;
+}
+
+.cross-shape-square:nth-of-type(4) {
+ animation-delay: -5.7142857143s;
+}
+
+.cross-shape-square:nth-of-type(5) {
+ animation-delay: -7.1428571429s;
+}
+
+.cross-shape-square:nth-of-type(6) {
+ animation-delay: -8.5714285714s;
+}
+
+.cross-shape-square:nth-of-type(7) {
+ animation-delay: -10s;
+}
+
+
+
+.picture{
+          border-color: #d8a323;
+          border-style: double;
+          border-spacing: 200px;
+          border-width: 3px;
+
+        }
+
+  .info-text{
+    color: whitesmoke;
+  }
+
+
+    </style>
+</head>
+<body>
+  <div class="info">
+    <div class="photo">
+      <img class="picture" id="picture" src="data:image/jpeg;base64,{{ img_data }}" width="350" height="350">
+
+
+    </div>
+    <h2 class="info-text" id="Name">Passenger: </h2>
+    <h2 class="info-text" id="PID">Passport ID: </h2>
+    <h2 class="info-text" id="Destination">Destination: </h2>
+    
+    <div class="photo">
+
+    </div>
+
+  </div>
+    <div class="container">
+        <div class="number">
+
+        
+        <div class="verification-text">
+          Face Verification</div>
+          <div class="loader">
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+            <div class="loader-square"></div>
+        
+            
+        </div>
+    </div>
+        <div class="number">
+        <div class="verification-text">
+        Passport Validity</div>
+        <div class="loader">
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+              <div class="loader-square"></div>
+    
+              
+        </div>
+        </div>
+
+        <div class="number">
+            <div class="verification-text">
+            Visa Validity</div>
+            <div class="loader">
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                  <div class="loader-square"></div>
+                
+                  
+            </div>
+            </div>
+
+            <div class="number">
+                <div class="verification-text">
+                Criminal Background Check</div>
+                <div class="loader">
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                      <div class="loader-square"></div>
+                    
+                      
+                </div>
+                </div>
+
+                <div class="number">
+                    <div class="verification-text">
+                    Health Issues Check</div>
+                    <div class="loader">
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                        
+                          
+                    </div>
+                </div>
+
+                <div class="number">
+                    <div class="verification-text">
+                    Notified Arriving Country</div>
+                    <div class="loader">
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                          <div class="loader-square"></div>
+                        
+                          
+                    </div>
+                </div>
+        </div>
+        <script>
+          var abc=123, i="i",v_ex,vcheck,p_ex,wcheck,hcheck,assist;
+          let result="success";
+          var counter=0;
+
+          
+function fun(result){
+
+  const loader = document.querySelector('.loader');
+
+  if(result == "success"){
+  const tickShape = document.createElement('div');
+  tickShape.classList.add('tick-shape');
+  loader.parentNode.replaceChild(tickShape, loader);
+  for (let i = 0; i < 8; i++) {
+    const tickLine = document.createElement('div');
+    tickLine.classList.add('tick-shape-square');
+    tickShape.appendChild(tickLine);
+    }
+  }
+else{
+  const tickShape = document.createElement('div');
+  tickShape.classList.add('cross-shape');
+
+  // Replace the loader with the tick-shape
+  loader.parentNode.replaceChild(tickShape, loader);
+
+  // Create the tick-lines elements
+  for (let i = 0; i < 8; i++) {
+    const tickLine = document.createElement('div');
+    tickLine.classList.add('cross-shape-square');
+    tickShape.appendChild(tickLine);
+  }
+}
+  
+}
+
+
+function details(){
+  fetch('/details',{
+      method: "POST",
+      headers: {
+            "Content-Type": "application/json",
+      },
+      body: JSON.stringify({i:i}),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("Name").textContent = "Passenger: " + data.name;
+      document.getElementById("PID").textContent = "Passport ID: " + data.pid;
+      document.getElementById("Destination").textContent = "Destination: " + data.arrival;
+      
+      
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function finalcheck(){
+  fetch('/finalcheck',{
+      method: "POST",
+      headers: {
+            "Content-Type": "application/json",
+      },
+      body: JSON.stringify({i:i}),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      p_ex = data.passport;
+      v_ex = data.visaresult;
+      vcheck = data.visacheck;
+      wcheck = data.wanted;
+      hcheck = data.healthcheck;
+      assist = data.assistance;
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+
+setTimeout(function() {
+  fun("success");},3000);
+
+function checkResults(counter) {
+    if (p_ex == "Y") {
+      counter++;
+    setTimeout(function() {
+      fun("success");
+    }, 6000);
+  } else {
+    setTimeout(function() {
+      fun("fail");
+    }, 6000);
+  }
+
+  if (vcheck == "Y" && v_ex == "Y") {
+      counter++;
+      setTimeout(function() {
+        fun("success");
+        
+      }, 9000);
+  }
+  else if(vcheck == "Y" && v_ex == "N"){
+    setTimeout(function() {
+      fun("fail");
+    },9000)
+  }
+  else if(vcheck == "N"){
+    setTimeout(function() {
+      fun("fail");
+    },9000)
+  }
+
+  if (wcheck == "N") {
+    counter++;
+    setTimeout(function() {
+      fun("success");
+      
+    }, 12000);
+  } else {
+    setTimeout(function() {
+      fun("fail");
+    }, 12000);
+  }
+
+  if (hcheck == "Y") {
+    counter++;
+    setTimeout(function() {
+      fun("success");
+      
+    }, 15000);
+  } else {
+    setTimeout(function() {
+      fun("fail");
+    }, 15000);
+  }
+  
+  if (counter==4){
+    setTimeout(function() {
+      fun("success");
+      counter++;
+    }, 18000);
+  } else {
+    setTimeout(function() {
+      fun("fail");
+    }, 18000);
+  }
+  counter=0;
+}
+
+
+
+details();
+setTimeout(function(){
+  finalcheck();
+},2000);
+setTimeout(function(){
+  checkResults(counter);},3000);
+
+
+
+
+
+
+
+
+
+
+        </script>
+        <script src="/static/plugins.js"></script>
+        <script src="/static/main.js"></script>
+</body>
+</html>
