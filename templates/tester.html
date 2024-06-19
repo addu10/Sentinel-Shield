@@ -593,6 +593,7 @@ function checkResults(counter) {
     setTimeout(function() {
       fun("success");
       counter++;
+      window.location.href = "{{url_for('verified')}}"
     }, 18000);
   } else {
     setTimeout(function() {

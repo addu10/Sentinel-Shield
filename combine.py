@@ -22,11 +22,13 @@ def write_file(image_data, filename):
         print("writing......",filename)
         file.write(image_data)
         print("Written")
+    file.close()
+
     
 
 def readBLOB(p_id, photo):
     print("Reading BLOB data from python_employee table")
-    global f_name, t_name, arrival, source
+    global f_name, t_name, arrival, source, l_name,mobile_no,airline
     try:
         connection = mysql.connector.connect(host='localhost',
                                              database='sentinel',
@@ -42,6 +44,7 @@ def readBLOB(p_id, photo):
         print("Storing employee image and bio-data on disk \n")
         for row in record:
             f_name = row[1]
+            l_name = row[2]
             t_name = f_name + " " + row[2]
             image = row[10]
             write_file(image, photo)
@@ -53,6 +56,10 @@ def readBLOB(p_id, photo):
         for row in record:
             source=row[6]
             arrival=row[7]
+            mobile_no=row[4]
+            airline=row[5]
+
+
 
 
     except mysql.connector.Error as error:
@@ -325,7 +332,31 @@ def gen_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
             
 
-            
+def finalnotify():
+    try:
+        connection = mysql.connector.connect(host='localhost',
+                                             database='sentinel',
+                                             user='root',
+                                             password='')
+
+        cursor = connection.cursor()
+        print("MYSQL ACTIVATED")
+
+        sql_fetch_blob_query_1 = """INSERT INTO %s values(%s,%s,%s,%s,%s,%s,%s)"""
+
+        cursor.execute(sql_fetch_blob_query_1,(arrival,data,f_name,l_name,mobile_no,airline,source,arrival))
+
+
+        
+
+
+    except mysql.connector.Error as error:
+        print("Error: ".format(error))
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
 app = Flask(__name__,template_folder="templates") 
 
@@ -377,6 +408,7 @@ def process():
 
 
 @app.route('/face_recog')
+           
 def face_recog():
     return render_template('face.html')
 
@@ -442,6 +474,9 @@ def finalcheck():
 def facefail():
     return render_template('qrscan.html')
 
+@app.route('/verified')
+def verified():
+    return render_template('welcomenew.html')
 
 @app.route('/contact')
 def contact():
