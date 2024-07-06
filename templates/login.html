@@ -53,7 +53,7 @@
       <div class="forms-container">
         <div class="signin-signup">
           <form action="#" id="login-form" class="sign-in-form">
-            <h2 class="title">Log in</h2>
+            <h2 class="title">OFFICER LOG IN</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
               <input type="text" id="user" placeholder="Username" />
@@ -69,20 +69,20 @@
             </div>
           </form>
           <form action="#" class="sign-up-form">
-            <h2 class="title">Sign up</h2>
+            <h2 class="title">ADMIN SIGN IN</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
-            </div>
-            <div class="input-field">
-              <i class="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" />
+              <input type="text" id="adminuser" placeholder="Username" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input type="password" id="adminpass" placeholder="Password" />
             </div>
-            <input type="submit" class="btn" value="Sign up" />
+            <button id="adminlogin-btn" class="btn solid">Login</button>
+            
+            <div id="adminmessage">
+              <font size="4" color="white" >Kindly enter your credentials</font>
+            </div>
           </form>
         </div>
       </div>
@@ -90,21 +90,22 @@
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
-            <h3>OFFICER REGISTRATION</h3>
+            <h3>ADMIN LOGIN</h3>
             <p>
-              Create an accout to get access  to the functions of this website.
+              Welcome Admin, Complete your Log in to access Admin Page
             </p>
             <button class="btn transparent" id="sign-up-btn">
               Sign up
             </button>
+            
           </div>
           <img src="img/log.svg" class="image" alt="" />
         </div>
         <div class="panel right-panel">
           <div class="content">
-            <h3>OFFICER REGISTRATION</h3>
+            <h3>OFFICER LOG IN</h3>
             <p>
-              Welcome admin.. Complete your Log In to access the website
+              Welcome Officer.. Complete your Log In to access the website
             </p>
             <button class="btn transparent" id="sign-in-btn">
               Log in
@@ -128,6 +129,7 @@ sign_in_btn.addEventListener("click", () => {
   container.classList.remove("sign-up-mode");
 });
 const login_btn = document.querySelector("#login-btn");
+const adminlogin_btn = document.querySelector("#adminlogin-btn");
 
 login_btn.addEventListener("click", () => {
         const username = document.getElementById("user").value;
@@ -162,6 +164,42 @@ login_btn.addEventListener("click", () => {
           document.getElementById("message").textContent = "Failed to log in.";
           document.getElementById("message").style.color = "white";
             document.getElementById("message").style.fontSize = "5";
+        });
+      });
+
+adminlogin_btn.addEventListener("click", () => {
+        const username = document.getElementById("adminuser").value;
+        const password = document.getElementById("adminpass").value;
+
+        fetch("/adminlogincheck", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            document.getElementById("adminmessage").textContent = "Logged in successfully!";
+            document.getElementById("adminmessage").style.color = "white";
+            document.getElementById("adminmessage").style.fontSize = "5";
+            window.location.href = "{{url_for('adminhome')}}";
+
+          } else {
+            document.getElementById("adminmessage").textContent = "Invalid username or password.";
+            document.getElementById("adminmessage").style.color = "white";
+            document.getElementById("adminmessage").style.fontSize = "5";
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          document.getElementById("adminmessage").textContent = "Failed to log in.";
+          document.getElementById("adminmessage").style.color = "white";
+            document.getElementById("adminmessage").style.fontSize = "5";
         });
       });
     </script>

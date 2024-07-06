@@ -1,4 +1,5 @@
-from flask import Flask,render_template, request, jsonify, Response, redirect, url_for
+from flask import Flask,render_template, request, jsonify, Response, redirect, url_for, render_template_string,  session 
+
 import mysql.connector
 from PIL import Image
 import os
@@ -359,6 +360,20 @@ def finalnotify():
             connection.close()
 
 app = Flask(__name__,template_folder="templates") 
+app.secret_key = os.urandom(24)  # Generate a random secret key for sessions
+
+# Database configuration
+db_config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'admin_db'
+}
+
+# Create a connection to the database
+def get_db_connection():
+    return mysql.connector.connect(**db_config)
+
 
 @app.route('/')
 def main():
@@ -381,12 +396,22 @@ def login():
     print(password)
     global result
 
-    data=login_check(username,password)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+    admin = cursor.fetchone()
+    conn.close()
+    print(admin)
+    if admin:
+        return jsonify({"status": "success"})
+    elif not admin:
+        return jsonify({"status": "fail"})
+    """data=login_check(username,password)
     print('after check',data)
     if data == "success":
         return jsonify({"status": "success"})
     elif data == "fail":
-        return jsonify({"status": "fail"})
+        return jsonify({"status": "fail"})"""
 
 
 
@@ -486,10 +511,96 @@ def contact():
 def help():
     return render_template('help.html')
 
-@app.route('/adminlogin')
-def adminlogin():
-    return render_template('admin_login.html')
 
+
+
+@app.route('/adminlogincheck', methods=['POST'])
+def adminlogincheck():
+    datanew = request.get_json()
+    username = datanew.get("username")
+    print(username)
+    password = datanew.get("password")
+    print(password)
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM admin WHERE username = %s AND password = %s", (username, password))
+    admin = cursor.fetchone()
+    conn.close()
+    print(admin)
+    if admin:
+        return jsonify({"status": "success"})
+    elif not admin:
+        return jsonify({"status": "fail"})
+
+
+
+@app.route('/adminhome')
+def adminhome():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users")
+    users = cursor.fetchall()
+    print(users)
+    conn.close()
+    return render_template('adminhome.html', users=users)
+
+@app.route('/add_user', methods=['GET', 'POST'])
+def add_user():
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO users (name, username, password) VALUES (%s, %s, %s)",
+                       (name, username, password))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('adminhome'))
+
+    return render_template('add_user.html')
+
+
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form['username']
+        password = request.form['password']
+
+        cursor.execute("UPDATE users SET name=%s, username=%s, password=%s WHERE id=%s",
+                       (name, username, password, user_id))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('adminhome'))
+
+    cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    return render_template('edit_user.html', user=user)
+
+@app.route('/delete_user/<int:user_id>')
+def delete_user(user_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('adminhome'))
+
+@app.route('/logout')
+def logout():
+    return render_template('login.html')
 
 if __name__=='__main__':
     app.run(debug=True)
