@@ -16,16 +16,19 @@ check_data = ""
   
 
 def write_file(image_data, filename):
-    # Convert binary data to proper format and write it on Hard Disk
-    print("entered file writing")
-    print(filename)
-    with open(filename, 'wb') as file:
-        print("writing......",filename)
-        file.write(image_data)
-        print("Written")
-    file.close()
+    try:
+        print("entered file writing")
+        print(filename)
+        if not os.path.exists(filename):
+            # Create the file if it doesn't exist
+            open(filename, 'a').close()
 
-    
+        with open(filename, 'wb') as file:
+            print("writing......", filename)
+            file.write(image_data)
+            print("Written")
+    except Exception as e:
+        print("Error writing file:", e)
 
 def readBLOB(p_id, photo):
     print("Reading BLOB data from python_employee table")
@@ -362,7 +365,7 @@ def finalnotify():
 app = Flask(__name__,template_folder="templates") 
 app.secret_key = os.urandom(24)  # Generate a random secret key for sessions
 
-# Database configuration
+# Admin Database configuration
 db_config = {
     'host': 'localhost',
     'user': 'root',
@@ -502,6 +505,10 @@ def facefail():
 @app.route('/verified')
 def verified():
     return render_template('welcomenew.html')
+
+@app.route('/rejected')
+def rejected():
+    return render_template('failnew.html')
 
 @app.route('/contact')
 def contact():

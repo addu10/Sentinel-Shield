@@ -598,6 +598,7 @@ function checkResults(counter) {
   } else {
     setTimeout(function() {
       fun("fail");
+      window.location.href = "{{url_for('rejected')}}"
     }, 18000);
   }
   counter=0;

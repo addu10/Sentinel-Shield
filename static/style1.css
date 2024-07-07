@@ -2,7 +2,7 @@
 
 body  {
     background-image: url('https://static.pexels.com/photos/414171/pexels-photo-414171.jpeg');
-  background-size:cover;
+  background-size: 100% 100vh;
         -webkit-animation: slidein 100s;
         animation: slidein 100s;
 
@@ -178,6 +178,71 @@ body {
     margin-left: 0.75rem;
     background-color: #ECFDF5;
     color: #065F46;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: 0.375rem;
+    border: none;
+  }
+  .fail {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    background-color: rgb(254 202 202);
+  }
+  
+  .fail-svg {
+    color: rgb(220 38 38);
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .fail-prompt-wrap {
+    margin-left: 0.75rem;
+  }
+  
+  .fail-prompt-heading {
+    font-weight: bold;
+    color: rgb(153 27 27);
+  }
+  
+  .fail-prompt-prompt {
+    margin-top: 0.5rem;
+    color: rgb(169 62 62);
+  }
+  
+  .fail-button-container {
+    display: flex;
+    margin-top: 0.875rem;
+    margin-bottom: -0.375rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .fail-button-main {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: #FECACA;
+    color: rgb(153 27 27);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: bold;
+    border-radius: 0.375rem;
+    border: none;
+  }
+  
+  .fail-button-main:hover {
+    background-color: #F7B6B6;
+  }
+  
+  .fail-button-secondary {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.75rem;
+    background-color: #FECACA;
+    color: rgb(220 38 38);
     font-size: 0.875rem;
     line-height: 1.25rem;
     border-radius: 0.375rem;
