@@ -100,6 +100,9 @@
           <div class="column lg-12">
               <button id="startButton">Start Scanning</button>
               <video id="videoElement" width="640" height="480"></video>
+              <div id="adminmessage">
+                <font size="4" color="black" >Kindly present your QR/Barcode</font>
+              </div>
               <input type="text" id="resultBox" placeholder="Scanned Result" readonly hidden>
               <button id="copyButton" hidden>Copy to Clipboard</button>
               
@@ -143,14 +146,30 @@
                             .then(response => response.json())
                             .then(data => {
                             // Process the response from the /process endpoint
-                            console.log(catRegNo);
+                            console.log(catRegNo,data.status);
+                            
+                            if (data.status === "success") {
+            document.getElementById("adminmessage").textContent = "Passenger Verified!";
+            document.getElementById("adminmessage").style.color = "black";
+            document.getElementById("adminmessage").style.fontSize = "5";
+            setTimeout(function(){
+              window.location.href = "{{url_for('face_recog')}}";},1500);
+            
+
+          } else if(data.status === "fail") {
+            document.getElementById("adminmessage").textContent = "Invalid Passenger.... Returning to QR PAGE";
+            document.getElementById("adminmessage").style.color = "red";
+            document.getElementById("adminmessage").style.fontSize = "6";
+            setTimeout(function(){
+              window.location.href = "{{url_for('qr')}}";},1500);
+          }
                         })
                         .catch(error => {
                             // Handle any errors that occurred during the request
                             console.error(error);
                         });
 
-                        window.location.href = "{{url_for('face_recog')}}";
+                        //window.location.href = "{{url_for('face_recog')}}";
                         
 
                         }

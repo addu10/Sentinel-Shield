@@ -78,7 +78,7 @@
                 <img class="video" src="{{ url_for('video_feed') }}" width="45%">
                 <div class="checkcounter">
                     <p id="message">
-                      HELLOOO
+                      .
                     </p>
                   </div>
                 <script>
@@ -115,6 +115,7 @@
                       .catch((error) => {
                         console.error(error);
                         document.getElementById("message").textContent = "Failed to capture face";
+                        window.location.href = "{{url_for('facefail')}}"
                       });
                     }
                   

@@ -17,16 +17,18 @@ check_data = ""
 
 def write_file(image_data, filename):
     try:
-        print("entered file writing")
-        print(filename)
-        if not os.path.exists(filename):
-            # Create the file if it doesn't exist
-            open(filename, 'a').close()
-
+        print("Entered file writing")
+        print("Filename:", filename)
+        
+        # Check if the directory exists; create it if necessary
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        
+        # Open the file in write binary mode ('wb')
         with open(filename, 'wb') as file:
-            print("writing......", filename)
+            print("Writing to file:", filename)
             file.write(image_data)
-            print("Written")
+            print("Write operation successful")
+            
     except Exception as e:
         print("Error writing file:", e)
 
@@ -46,6 +48,9 @@ def readBLOB(p_id, photo):
         cursor.execute(sql_fetch_blob_query, (p_id,))
         record = cursor.fetchall()
         print("Storing employee image and bio-data on disk \n")
+        if not record:
+            f_name="None"
+
         for row in record:
             f_name = row[1]
             l_name = row[2]
@@ -203,6 +208,7 @@ def facercg():
     x_image = face_recognition.load_image_file(f'{datetime.date.today()}_{data}.jpg')
     x_face_encoding = face_recognition.face_encodings(x_image)[0]
     # Create arrays of known face encodings and their names
+    
     global known_face_encodings 
     known_face_encodings = [x_face_encoding]
     global known_face_names 
@@ -432,7 +438,10 @@ def process():
     global face_image
     face_image = f'{datetime.date.today()}_{data}.jpg'
     fname=readBLOB(data,os.path.join('Faces',f'{datetime.date.today()}_{data}.jpg'))
-    return jsonify({'status':'success'})
+    if fname!="None":
+        return jsonify({'status':'success'})
+    else:
+        return jsonify({'status':'fail'})
 
 
 @app.route('/face_recog')
@@ -472,6 +481,8 @@ def verification():
     data = io.BytesIO()
     im.save(data,"JPEG")
     encoded_img_data = base64.b64encode(data.getvalue())
+    path2 = 'C:/Users/adnan/Documents/Project/FinalProject'
+    os.chdir(path2)
 
     return render_template("tester.html",img_data=encoded_img_data.decode('utf-8'))
 
