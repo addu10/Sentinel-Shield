@@ -540,11 +540,11 @@ function checkResults(counter) {
       counter++;
     setTimeout(function() {
       fun("success");
-    }, 6000);
+    }, 4000);
   } else {
     setTimeout(function() {
       fun("fail");
-    }, 6000);
+    }, 4000);
   }
 
   if (vcheck == "Y" && v_ex == "Y") {
@@ -552,17 +552,17 @@ function checkResults(counter) {
       setTimeout(function() {
         fun("success");
         
-      }, 9000);
+      }, 6000);
   }
   else if(vcheck == "Y" && v_ex == "N"){
     setTimeout(function() {
       fun("fail");
-    },9000)
+    },6000)
   }
   else if(vcheck == "N"){
     setTimeout(function() {
       fun("fail");
-    },9000)
+    },6000)
   }
 
   if (wcheck == "N") {
@@ -570,11 +570,11 @@ function checkResults(counter) {
     setTimeout(function() {
       fun("success");
       
-    }, 12000);
+    }, 8000);
   } else {
     setTimeout(function() {
       fun("fail");
-    }, 12000);
+    }, 8000);
   }
 
   if (hcheck == "Y") {
@@ -582,24 +582,27 @@ function checkResults(counter) {
     setTimeout(function() {
       fun("success");
       
-    }, 15000);
+    }, 10000);
   } else {
     setTimeout(function() {
       fun("fail");
-    }, 15000);
+    }, 10000);
   }
   
   if (counter==4){
     setTimeout(function() {
       fun("success");
       counter++;
+    }, 12000);
+    setTimeout(function() {
       window.location.href = "{{url_for('verified')}}"
-    }, 18000);
-  } else {
+    }, 14000);
+  } 
+  else {
     setTimeout(function() {
       fun("fail");
       window.location.href = "{{url_for('rejected')}}"
-    }, 18000);
+    }, 14000);
   }
   counter=0;
 }

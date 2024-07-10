@@ -1,5 +1,4 @@
-from flask import Flask,render_template, request, jsonify, Response, redirect, url_for, render_template_string,  session 
-
+from flask import Flask,render_template, request, jsonify, Response, redirect, url_for
 import mysql.connector
 from PIL import Image
 import os
@@ -19,9 +18,7 @@ def write_file(image_data, filename):
     try:
         print("Entered file writing")
         print("Filename:", filename)
-        
-        # Check if the directory exists; create it if necessary
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        #os.makedirs(os.path.dirname(filename), exist_ok=True)
         
         # Open the file in write binary mode ('wb')
         with open(filename, 'wb') as file:
@@ -85,7 +82,7 @@ def readBLOB(p_id, photo):
 def readverification(p_id):
     global pexpiry, vexpiry, p_ex_result, vcheck, v_ex_result, w_check ,h_check, assistance
     h_check = "Y"
-
+    check_counter=0
     print("Reading data from sentinel")
 
     try:
@@ -107,6 +104,7 @@ def readverification(p_id):
             if(pexpiry>today):
                p_ex_result = "Y"
                print("Passport Validity Successful:  ",p_ex_result)
+               check_counter+=1
             else:
                print("Invalid Passport")
                p_ex_result = "N"
@@ -129,6 +127,7 @@ def readverification(p_id):
                     if(vexpiry>today):
                         v_ex_result = "Y"
                         print("Visa Validity Successful:  ",v_ex_result)
+                        check_counter+=1
                     else:
                         v_ex_result = "N"
 
@@ -141,6 +140,7 @@ def readverification(p_id):
         global w_check
         if record == []:
             w_check="N"
+            check_counter+=1
         else: 
             for row in record:
                 print("Checking criminal activity")
@@ -152,6 +152,7 @@ def readverification(p_id):
                     else:
                         w_check = "N"
                         print("No criminal activity found")
+                        check_counter+=1
         
 
         sql_query_5 = """ SELECT * FROM healthdetails where Passport_ID = %s"""
@@ -177,7 +178,16 @@ def readverification(p_id):
             else:
                 h_check = "Y"
                 print("proper vaccine done")
-                
+                check_counter+=1
+        
+        print(check_counter)
+        if check_counter>=4:
+            print("Entered final Database Upload")
+            sql_fetch_blob_query_6 = """INSERT INTO verified values(%s,%s,%s,%s,%s,%s,%s)"""
+            print(data,f_name,l_name,mobile_no,airline,source,arrival)
+            print(type(data),type(mobile_no))
+            cursor.execute(sql_fetch_blob_query_6,(data,f_name,l_name,mobile_no,airline,source,arrival))
+            connection.commit()
         
         
 
@@ -339,37 +349,10 @@ def gen_frames():
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
 
-def finalnotify():
-    try:
-        connection = mysql.connector.connect(host='localhost',
-                                             database='sentinel',
-                                             user='root',
-                                             password='')
-
-        cursor = connection.cursor()
-        print("MYSQL ACTIVATED")
-
-        sql_fetch_blob_query_1 = """INSERT INTO %s values(%s,%s,%s,%s,%s,%s,%s)"""
-
-        cursor.execute(sql_fetch_blob_query_1,(arrival,data,f_name,l_name,mobile_no,airline,source,arrival))
-
-
-        
-
-
-    except mysql.connector.Error as error:
-        print("Error: ".format(error))
-
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
 
 app = Flask(__name__,template_folder="templates") 
-app.secret_key = os.urandom(24)  # Generate a random secret key for sessions
 
 # Admin Database configuration
 db_config = {
@@ -396,118 +379,13 @@ def landing():
 def login_page():
     return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
-def login():
-    datanew = request.get_json()
-    username = datanew.get("username")
-    print(username)
-    password = datanew.get("password")
-    print(password)
-    global result
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-    admin = cursor.fetchone()
-    conn.close()
-    print(admin)
-    if admin:
-        return jsonify({"status": "success"})
-    elif not admin:
-        return jsonify({"status": "fail"})
-    """data=login_check(username,password)
-    print('after check',data)
-    if data == "success":
-        return jsonify({"status": "success"})
-    elif data == "fail":
-        return jsonify({"status": "fail"})"""
-
-
-
 @app.route('/qr')  
 def qr(): 
     return render_template('qrscan.html') 
-  
-@app.route('/process', methods=['POST']) 
-def process(): 
-    global fname
-    global data
-    data = request.get_json()
-    print('The catregno is: ', data)
-    os.getcwd()
-    global face_image
-    face_image = f'{datetime.date.today()}_{data}.jpg'
-    fname=readBLOB(data,os.path.join('Faces',f'{datetime.date.today()}_{data}.jpg'))
-    if fname!="None":
-        return jsonify({'status':'success'})
-    else:
-        return jsonify({'status':'fail'})
 
-
-@app.route('/face_recog')
-           
+@app.route('/face_recog')           
 def face_recog():
     return render_template('face.html')
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@app.route('/counter',methods=["POST"])
-def counter():
-    hello=request.get_json()
-    i=hello.get("i")
-
-    camera.release()
-    if check_data == "success":
-        print("SUCCESS SENT TO JS",check_data)
-        return jsonify({"status": "success"})
-    elif check_data == "fail":
-        print("FAIL SENT TO JS",check_data)
-        return jsonify({"status": "fail"})
-    else:
-        print("FAILED TO SEND AT ALL")
-
-
-
-
-
-
-  
-@app.route('/verification')
-def verification():
-    im = Image.open(face_image)
-    im = im.convert('RGB')
-    data = io.BytesIO()
-    im.save(data,"JPEG")
-    encoded_img_data = base64.b64encode(data.getvalue())
-    path2 = 'C:/Users/adnan/Documents/Project/FinalProject'
-    os.chdir(path2)
-
-    return render_template("tester.html",img_data=encoded_img_data.decode('utf-8'))
-
-@app.route('/details',methods=["POST"])
-def details():
-    requesting=request.get_json()
-    i=requesting.get("i")
-    print(fname,data,source,arrival)
-    readverification(data)
-    return jsonify({'name':t_name,'pid':data,'arrival':arrival})
-
-
-
-@app.route('/finalcheck',methods=["POST"])
-def finalcheck():
-    print(data)
-    requesting_new=request.get_json()
-    i=requesting_new.get("i")
-    print(p_ex_result, vcheck, v_ex_result,w_check,h_check,assistance)
-    return jsonify({'passport':p_ex_result,'visacheck':vcheck,'visaresult':v_ex_result,
-                    'wanted':w_check,'healthcheck':h_check,'assistance':assistance})
-
-
-
-
 
 @app.route('/facefail')
 def facefail():
@@ -529,8 +407,29 @@ def contact():
 def help():
     return render_template('help.html')
 
+@app.route('/logout')
+def logout():
+    return render_template('login.html')
 
+@app.route('/login', methods=['POST'])
+def login():
+    datanew = request.get_json()
+    username = datanew.get("username")
+    print(username)
+    password = datanew.get("password")
+    print(password)
+    global result
 
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+    admin = cursor.fetchone()
+    conn.close()
+    print(admin)
+    if admin:
+        return jsonify({"status": "success"})
+    elif not admin:
+        return jsonify({"status": "fail"})
 
 @app.route('/adminlogincheck', methods=['POST'])
 def adminlogincheck():
@@ -550,8 +449,6 @@ def adminlogincheck():
         return jsonify({"status": "success"})
     elif not admin:
         return jsonify({"status": "fail"})
-
-
 
 @app.route('/adminhome')
 def adminhome():
@@ -580,7 +477,6 @@ def add_user():
         return redirect(url_for('adminhome'))
 
     return render_template('add_user.html')
-
 
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 def edit_user(user_id):
@@ -615,10 +511,70 @@ def delete_user(user_id):
     conn.close()
 
     return redirect(url_for('adminhome'))
+  
+@app.route('/process', methods=['POST']) 
+def process(): 
+    global fname
+    global data
+    data = request.get_json()
+    print('The catregno is: ', data)
+    os.getcwd()
+    global face_image
+    face_image = f'{datetime.date.today()}_{data}.jpg'
+    fname=readBLOB(data,os.path.join('Faces',f'{datetime.date.today()}_{data}.jpg'))
+    if fname!="None":
+        return jsonify({'status':'success'})
+    else:
+        return jsonify({'status':'fail'})
 
-@app.route('/logout')
-def logout():
-    return render_template('login.html')
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/counter',methods=["POST"])
+def counter():
+    hello=request.get_json()
+    i=hello.get("i")
+
+    camera.release()
+    if check_data == "success":
+        print("SUCCESS SENT TO JS",check_data)
+        return jsonify({"status": "success"})
+    elif check_data == "fail":
+        print("FAIL SENT TO JS",check_data)
+        return jsonify({"status": "fail"})
+    else:
+        print("FAILED TO SEND AT ALL")
+  
+@app.route('/verification')
+def verification():
+    im = Image.open(face_image)
+    im = im.convert('RGB')
+    data = io.BytesIO()
+    im.save(data,"JPEG")
+    encoded_img_data = base64.b64encode(data.getvalue())
+    path2 = 'C:/Users/adnan/Documents/Project/FinalProject'
+    os.chdir(path2)
+
+    return render_template("tester.html",img_data=encoded_img_data.decode('utf-8'))
+
+@app.route('/details',methods=["POST"])
+def details():
+    requesting=request.get_json()
+    i=requesting.get("i")
+    print(fname,data,source,arrival)
+    readverification(data)
+    return jsonify({'name':t_name,'pid':data,'arrival':arrival})
+
+@app.route('/finalcheck',methods=["POST"])
+def finalcheck():
+    print(data)
+    requesting_new=request.get_json()
+    i=requesting_new.get("i")
+    print(p_ex_result, vcheck, v_ex_result,w_check,h_check,assistance)
+    return jsonify({'passport':p_ex_result,'visacheck':vcheck,'visaresult':v_ex_result,
+                    'wanted':w_check,'healthcheck':h_check,'assistance':assistance})
+
 
 if __name__=='__main__':
     app.run(debug=True)
